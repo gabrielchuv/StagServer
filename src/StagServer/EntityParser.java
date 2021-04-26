@@ -24,7 +24,7 @@ public class EntityParser {
         this.entityFileName = entityFileName;
     }
 
-    public void execute() {
+    public void parse() {
         try {
             Parser parser = new Parser();
             FileReader reader = new FileReader(entityFileName);

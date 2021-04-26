@@ -2,6 +2,7 @@
   <library name="JPGD">
     <CLASSES>
       <root url="jar://$PROJECT_DIR$/dot-parser.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../json-parser.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

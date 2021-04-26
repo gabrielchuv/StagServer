@@ -15,7 +15,7 @@ public class StagServer {
     {
         try {
             EntityParser entitiesParser = new EntityParser(entityFilename);
-            entitiesParser.execute();
+            entitiesParser.parse();
             entitiesParser.printing();
             ServerSocket ss = new ServerSocket(portNumber);
             System.out.println("Server Listening");
