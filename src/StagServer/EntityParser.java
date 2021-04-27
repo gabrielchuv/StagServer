@@ -32,7 +32,7 @@ public class EntityParser {
             ArrayList<Graph> graphs = parser.getGraphs();
             ArrayList<Graph> subGraphs = graphs.get(0).getSubgraphs();
             for(Graph g : subGraphs){
-                System.out.printf("id = %s\n",g.getId().getId());
+               // System.out.printf("id = %s\n",g.getId().getId());
 
                 ArrayList<Graph> subGraphs1 = g.getSubgraphs();
                 for (Graph g1 : subGraphs1){
@@ -42,42 +42,43 @@ public class EntityParser {
                     location.add(nLoc.getId().getId());
                     location.add(nLoc.getAttribute("description"));
 
-                    System.out.printf("\tid = %s, name = %s\n",g1.getId().getId(), nLoc.getId().getId());
-                    System.out.println("location desc: " + nLoc.getAttribute("description"));
+                   // System.out.printf("\tid = %s, name = %s\n",g1.getId().getId(), nLoc.getId().getId());
+                    // System.out.println("location desc: " + nLoc.getAttribute("description"));
 
                     ArrayList<Graph> subGraphs2 = g1.getSubgraphs();
                     HashMap<String, HashMap<String,String>> elements = new HashMap<>();
                     for (Graph g2 : subGraphs2) {
 
-                        System.out.printf("\t\tid = %s\n", g2.getId().getId());
+                        //System.out.printf("\t\tid = %s\n", g2.getId().getId());
                         ArrayList<Node> nodesEnt = g2.getNodes(false);
                         HashMap<String,String> element = new HashMap<>();
                         for (Node nEnt : nodesEnt) {
-                            System.out.println("1");
-                            System.out.printf("\t\t\tid = %s, description = %s\n", nEnt.getId().getId(), nEnt.getAttribute("description"));
+                            //  System.out.println("1");
+                            //  System.out.printf("\t\t\tid = %s, description = %s\n", nEnt.getId().getId(), nEnt.getAttribute("description"));
 
-                            System.out.println("2");
+                            //  System.out.println("2");
                             element.put(nEnt.getId().getId(),nEnt.getAttribute("description"));
-                            System.out.println("element: " + element);
+                            //  System.out.println("element: " + element);
 
-                            System.out.println("3");
-                            System.out.println("elements1: " + elements);
+                            // System.out.println("3");
+                            //  System.out.println("elements1: " + elements);
 
                         }
                         elements.put(g2.getId().getId(), element);
-                        System.out.println("elements2: " + elements);
+                        // System.out.println("elements2: " + elements);
 
 
                         //System.out.println(location);
                         //System.out.println(elements);
 
                     }
-                    entities.setLocations(location, elements);
+                    entities.setLocation(location, elements);
                 }
 
                 ArrayList<Edge> edges = g.getEdges();
                 for (Edge e : edges){
-                    System.out.printf("Path from %s to %s\n", e.getSource().getNode().getId().getId(), e.getTarget().getNode().getId().getId());
+                    // System.out.printf("Path from %s to %s\n", e.getSource().getNode().getId().getId(), e.getTarget().getNode().getId().getId());
+                    entities.setPath(e.getSource().getNode().getId().getId(), e.getTarget().getNode().getId().getId());
                 }
             }
 
@@ -94,6 +95,7 @@ public class EntityParser {
         System.out.println();
         System.out.println();
         System.out.println(entities.getLocations());
+        System.out.println(entities.getPaths());
     }
 }
 

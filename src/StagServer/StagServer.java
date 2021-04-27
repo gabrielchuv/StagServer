@@ -16,7 +16,14 @@ public class StagServer {
         try {
             EntityParser entitiesParser = new EntityParser(entityFilename);
             entitiesParser.parse();
-            entitiesParser.printing();
+            /* for testing */
+            //entitiesParser.printing();
+
+            ActionParser actionParser = new ActionParser(actionFilename);
+            actionParser.parse();
+            /* for testing */
+            //actionParser.printing();
+
             ServerSocket ss = new ServerSocket(portNumber);
             System.out.println("Server Listening");
             while(true) acceptNextConnection(ss);
@@ -45,5 +52,7 @@ public class StagServer {
     {
         String line = in.readLine();
         out.write("You said... " + line + "\n");
+        CommandParser commandParser = new CommandParser(line);
+        commandParser.parse();
     }
 }

@@ -12,14 +12,25 @@ public class Entities {
 
     public Entities() {
         locations = new LinkedHashMap<>();
+        paths = new HashMap<>();
     }
 
-    public void setLocations(ArrayList<String> location, HashMap<String, HashMap<String,String>> elements) {
+    public void setLocation(ArrayList<String> location, HashMap<String, HashMap<String,String>> elements) {
         locations.put(location, elements);
     }
 
+    public void setPath(String startLocation, String endLocation) {
+        paths.put(startLocation, endLocation);
+    }
+
+    /* FOR TESTING */
     public LinkedHashMap<ArrayList<String>, HashMap<String, HashMap<String, String>>> getLocations() {
         return locations;
+    }
+
+    /* FOR TESTING */
+    public HashMap<String, String> getPaths() {
+        return paths;
     }
 
 }
