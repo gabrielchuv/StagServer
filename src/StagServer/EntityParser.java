@@ -5,6 +5,7 @@ import com.alexmerz.graphviz.objects.Edge;
 import com.alexmerz.graphviz.objects.Graph;
 import com.alexmerz.graphviz.objects.Node;
 
+import javax.swing.text.html.parser.Entity;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -24,7 +25,7 @@ public class EntityParser {
         this.entityFileName = entityFileName;
     }
 
-    public void parse() {
+    public Entities parse() {
         try {
             Parser parser = new Parser();
             FileReader reader = new FileReader(entityFileName);
@@ -41,6 +42,12 @@ public class EntityParser {
                     ArrayList<String> location = new ArrayList<>();
                     location.add(nLoc.getId().getId());
                     location.add(nLoc.getAttribute("description"));
+                    /* NEW LOCATION */
+                    String newLocationName = nLoc.getId().getId();
+                    Location newLocation = new Location();
+                    newLocation.setDescription(nLoc.getAttribute("description"));
+
+
 
                    // System.out.printf("\tid = %s, name = %s\n",g1.getId().getId(), nLoc.getId().getId());
                     // System.out.println("location desc: " + nLoc.getAttribute("description"));
@@ -73,7 +80,13 @@ public class EntityParser {
 
                     }
                     entities.setLocation(location, elements);
+
+                    /* NEW LOCATION */
+                    newLocation.setLocationContents(elements);
+                    entities.setNewLocation(newLocationName, newLocation);
                 }
+                System.out.println("Printing what I want!!");
+                System.out.println(entities.getNewLocations());
 
                 ArrayList<Edge> edges = g.getEdges();
                 for (Edge e : edges){
@@ -87,6 +100,8 @@ public class EntityParser {
         } catch (com.alexmerz.graphviz.ParseException pe) {
             System.out.println(pe);
         }
+
+        return(entities);
     }
 
     public void printing() {

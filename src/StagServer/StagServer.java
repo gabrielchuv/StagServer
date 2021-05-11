@@ -3,8 +3,12 @@ package StagServer;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 
 public class StagServer {
+
+    private Entities entities;
+
     public static void main(String args[])
     {
         if(args.length != 2) System.out.println("Usage: java StagServer <entity-file> <action-file>");
@@ -15,9 +19,9 @@ public class StagServer {
     {
         try {
             EntityParser entitiesParser = new EntityParser(entityFilename);
-            entitiesParser.parse();
+            entities = entitiesParser.parse();
             /* for testing */
-            //entitiesParser.printing();
+            entitiesParser.printing();
 
             ActionParser actionParser = new ActionParser(actionFilename);
             actionParser.parse();
@@ -53,6 +57,14 @@ public class StagServer {
         String line = in.readLine();
         out.write("You said... " + line + "\n");
         CommandParser commandParser = new CommandParser(line);
-        commandParser.parse();
+        ArrayList<String> output = new ArrayList<>();
+        output = commandParser.parse(entities);
+        if(output != null) {
+            for(int i = 0; i < output.size(); i++) {
+                out.write(output.get(i) + "\n");
+                //System.out.println();
+            }
+        }
+
     }
 }
