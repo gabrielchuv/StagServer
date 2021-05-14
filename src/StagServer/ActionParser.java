@@ -2,18 +2,14 @@ package StagServer;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.Reader;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 
 public class ActionParser {
 
@@ -25,12 +21,11 @@ public class ActionParser {
         actions = new Actions();
     }
 
-    public void parse() {
+    public Actions parse() {
         JSONParser parser = new JSONParser();
         try {
             FileReader reader = new FileReader(actionFileName);
             JSONObject jsonObject = (JSONObject) parser.parse(reader);
-            //System.out.println(jsonObject);
 
             JSONArray actions = (JSONArray) jsonObject.get("actions");
 
@@ -69,12 +64,12 @@ public class ActionParser {
             exception.printStackTrace();
         }
 
+        return(actions);
+
     }
 
     public void printing() {
         System.out.println("PRINTING");
-        System.out.println();
-        System.out.println();
         System.out.println();
         System.out.println(actions.getActions());
     }

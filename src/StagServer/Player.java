@@ -25,8 +25,23 @@ public class Player {
         this.inventory.put(artefactName, artefactDescription);
     }
 
+    public void deleteArtefact(String artefactName) {
+        this.inventory.remove(artefactName);
+    }
+
+    public String getArtefactDescription(String artefactName) {
+        return this.inventory.get(artefactName);
+    }
+
     public void addArtefactToNewInventory(String artefactName) {
         this.newInventory.add(artefactName);
+    }
+
+    public boolean itemExists(String item) {
+        if(!inventory.containsKey(item)) {
+            return false;
+        }
+        return true;
     }
 
     /* TO DELETE */
@@ -41,6 +56,7 @@ public class Player {
 
     public void setNewCurrentLocation(String newCurrentLocation) {
         this.newCurrentLocation = newCurrentLocation;
+        System.out.printf("New location: %s\n\n\n\n", newCurrentLocation);
     }
 
     public String getNewCurrentLocation() {
@@ -63,8 +79,6 @@ public class Player {
     /*public ArrayList<String> getInventory() {
         return inventory;
     }*/
-
-
 
 
     /*public String printInventory() {

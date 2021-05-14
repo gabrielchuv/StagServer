@@ -10,6 +10,7 @@ digraph layout {
             subgraph artefacts {
                 node [shape = "diamond"];
                 potion [description = "Magic potion"];
+                axe [description = "A razor sharp axe"];
             }
             subgraph furniture {
                 node [shape = "hexagon"];
@@ -24,6 +25,10 @@ digraph layout {
                 node [shape = "diamond"];
                 key [description = "Brass key"];
             }
+            subgraph furniture {
+                            node [shape = "hexagon"];
+                            tree [description = "A tall pine tree"];
+                        }
         }
 
         subgraph cluster003 {
@@ -43,6 +48,7 @@ digraph layout {
             }
             subgraph artefacts {
                 node [shape = "diamond"];
+                log [description = "A heavy wooden log"];
             }
             subgraph furniture {
                 node [shape = "hexagon"];

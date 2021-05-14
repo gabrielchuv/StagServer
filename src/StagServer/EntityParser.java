@@ -85,13 +85,14 @@ public class EntityParser {
                     newLocation.setLocationContents(elements);
                     entities.setNewLocation(newLocationName, newLocation);
                 }
-                System.out.println("Printing what I want!!");
-                System.out.println(entities.getNewLocations());
+                //System.out.println("Printing what I want!!");
+                //System.out.println(entities.getNewLocations());
 
                 ArrayList<Edge> edges = g.getEdges();
                 for (Edge e : edges){
                     // System.out.printf("Path from %s to %s\n", e.getSource().getNode().getId().getId(), e.getTarget().getNode().getId().getId());
-                    entities.setPath(e.getSource().getNode().getId().getId(), e.getTarget().getNode().getId().getId());
+                    //entities.setPath(e.getSource().getNode().getId().getId(), e.getTarget().getNode().getId().getId());
+                    entities.setNewPath(e.getSource().getNode().getId().getId(), e.getTarget().getNode().getId().getId());
                 }
             }
 
@@ -107,10 +108,9 @@ public class EntityParser {
     public void printing() {
         System.out.println("PRINTING");
         System.out.println();
-        System.out.println();
-        System.out.println();
         System.out.println(entities.getLocations());
-        System.out.println(entities.getPaths());
+        System.out.println(entities.getNewPaths());
+        System.out.println();
     }
 }
 

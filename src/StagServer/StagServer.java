@@ -8,6 +8,7 @@ import java.util.ArrayList;
 public class StagServer {
 
     private Entities entities;
+    private Actions actions;
 
     public static void main(String args[])
     {
@@ -24,9 +25,9 @@ public class StagServer {
             entitiesParser.printing();
 
             ActionParser actionParser = new ActionParser(actionFilename);
-            actionParser.parse();
+            actions = actionParser.parse();
             /* for testing */
-            //actionParser.printing();
+            actionParser.printing();
 
             ServerSocket ss = new ServerSocket(portNumber);
             System.out.println("Server Listening");
@@ -58,7 +59,7 @@ public class StagServer {
         out.write("You said... " + line + "\n");
         CommandParser commandParser = new CommandParser(line);
         ArrayList<String> output = new ArrayList<>();
-        output = commandParser.parse(entities);
+        output = commandParser.parse(entities, actions);
         if(output != null) {
             for(int i = 0; i < output.size(); i++) {
                 out.write(output.get(i) + "\n");

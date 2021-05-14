@@ -16,6 +16,8 @@ public class Actions {
         actions.add(action);
     }
 
+
+
     /* FOR TESTING */
     public ArrayList<HashMap<String, ArrayList<String>>> getActions() {
         return actions;
