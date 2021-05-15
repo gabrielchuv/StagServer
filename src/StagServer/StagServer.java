@@ -56,8 +56,9 @@ public class StagServer {
     private void processNextCommand(BufferedReader in, BufferedWriter out) throws IOException
     {
         String line = in.readLine();
-        out.write("You said... " + line + "\n");
-        CommandParser commandParser = new CommandParser(line);
+        //CommandParser commandParser = new CommandParser(line);
+        parserInterpreter commandParser = new parserInterpreter(line);
+
         ArrayList<String> output = new ArrayList<>();
         output = commandParser.parse(entities, actions);
         if(output != null) {

@@ -6,19 +6,11 @@ import java.util.HashMap;
 public class Player {
 
     private HashMap<String, String> inventory;
-    private ArrayList<String> newInventory;
-    private ArrayList<String> currentLocation;
-    private String newCurrentLocation;
-    //private String playerName;
+   // private ArrayList<String> currentLocation;
+    private String currentLocation;
 
     public Player() {
         inventory = new HashMap<>();
-        newInventory = new ArrayList<>();
-    }
-
-    public void setStartLocation(ArrayList<String> startLocation) {
-        this.currentLocation = startLocation;
-        /* need to add newcurrentlocation here?? */
     }
 
     public void addArtefactToInventory(String artefactName, String artefactDescription) {
@@ -33,10 +25,6 @@ public class Player {
         return this.inventory.get(artefactName);
     }
 
-    public void addArtefactToNewInventory(String artefactName) {
-        this.newInventory.add(artefactName);
-    }
-
     public boolean itemExists(String item) {
         if(!inventory.containsKey(item)) {
             return false;
@@ -44,23 +32,13 @@ public class Player {
         return true;
     }
 
-    /* TO DELETE */
-   /* public void setCurrentLocation(ArrayList<String> currentLocation) {
+    public void setCurrentLocation(String currentLocation) {
         this.currentLocation = currentLocation;
-    }*/
-
-    /* TO DELETE */
-    /*public ArrayList<String> getCurrentLocation() {
-        return this.currentLocation;
-    }*/
-
-    public void setNewCurrentLocation(String newCurrentLocation) {
-        this.newCurrentLocation = newCurrentLocation;
-        System.out.printf("New location: %s\n\n\n\n", newCurrentLocation);
+        System.out.printf("New location: %s\n\n\n\n", currentLocation);
     }
 
-    public String getNewCurrentLocation() {
-        return this.newCurrentLocation;
+    public String getCurrentLocation() {
+        return this.currentLocation;
     }
 
     public ArrayList<String> getInventory() {
@@ -73,16 +51,4 @@ public class Player {
         return inventory;
     }
 
-    public ArrayList<String> getNewInventory() {
-        return newInventory;
-    }
-    /*public ArrayList<String> getInventory() {
-        return inventory;
-    }*/
-
-
-    /*public String printInventory() {
-        System.out.println(inventory);
-        return null;
-    }*/
 }

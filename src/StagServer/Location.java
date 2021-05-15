@@ -6,13 +6,7 @@ import java.util.HashMap;
 public class Location {
 
     private String description;
-/*    HashMap<String, Artefact> artefacts;
-    HashMap<String, Charact> characters;
-    HashMap<String, Player> players;
-    HashMap<String, Furniture> furniture;
-
- */
-    HashMap<String, HashMap<String,String>> locationContents;
+    private HashMap<String, HashMap<String,String>> locationContents;
 
     public Location() {
         locationContents = new HashMap<>();
@@ -49,7 +43,7 @@ public class Location {
     public ArrayList<String> getFurniture() {
         ArrayList<String> furniture = new ArrayList<>();
         for (String key: locationContents.get("furniture").keySet()) {
-            furniture.add("A " + locationContents.get("furniture").get(key));
+            furniture.add(locationContents.get("furniture").get(key));
         }
         return furniture;
     }
@@ -58,7 +52,7 @@ public class Location {
     public ArrayList<String> getCharacters() {
         ArrayList<String> furniture = new ArrayList<>();
         for (String key: locationContents.get("characters").keySet()) {
-            furniture.add("A " + locationContents.get("characters").get(key));
+            furniture.add(locationContents.get("characters").get(key));
         }
         return furniture;
     }
@@ -66,7 +60,7 @@ public class Location {
     public ArrayList<String> getArtefacts() {
         ArrayList<String> artefacts = new ArrayList<>();
         for (String key: locationContents.get("artefacts").keySet()) {
-            artefacts.add("A " + locationContents.get("artefacts").get(key));
+            artefacts.add(locationContents.get("artefacts").get(key));
         }
         return artefacts;
     }
@@ -94,7 +88,6 @@ public class Location {
 
     public boolean itemExists(String item) {
         for(int i = 0; i < locationContents.size(); i++) {
-           // for(int j = 0; j < items.size(); j++) {
             if(artefactsExist() && locationContents.get("artefacts").containsKey(item)) {
                 return true;
             }
@@ -105,7 +98,6 @@ public class Location {
                 return true;
             }
         }
-       // }
         return false;
     }
 
