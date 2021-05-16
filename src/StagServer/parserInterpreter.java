@@ -22,7 +22,7 @@ public class parserInterpreter {
 
         /* NEED TO DEAL WITH NULL EXCEPTIONS FOR ALL OF THESE: I.E. artefact not exisiting etc. */
 
-        String[] tokenizedCommand = tok();
+     //   String[] tokenizedCommand = tok();
         // NEW APPROACH
       //  HashMap<String, ArrayList<String>> newTokenizedCommand = newTokenize();
         // EVEN NEWER APPROACH
@@ -43,7 +43,7 @@ public class parserInterpreter {
         currentLocation = entities.getPlayerLocation(currentPlayer);
 
         /* Skipping initial ":" */
-        i+=2;
+       // i+=2;
 
         /* Inventory command */
        // if(tokenizedCommand[i].toLowerCase().equals("inventory") || tokenizedCommand[i].toLowerCase().equals("inv")) {
@@ -55,6 +55,15 @@ public class parserInterpreter {
       /*  if(newTokenizedCommand.get(currentPlayer).contains("inventory") || newTokenizedCommand.get(currentPlayer).contains("inv")) {
             return entities.getPlayerInventory(currentPlayer);
         }*/
+
+        /* CHECKING FOR INCORRECT USER INPUT */
+        if(multipleBuiltinExist(newTokenizedCommand)) {
+            ArrayList<String> errorMessage = new ArrayList<>();
+            errorMessage.add("Invalid command: multiple builtin commands");
+            return errorMessage;
+        }
+
+
         /* EVEN NEWER APPROACH - Inventory command */
         if(newTokenizedCommand.contains("inventory") || newTokenizedCommand.contains("inv")) {
             return entities.getPlayerInventory(currentPlayer);
@@ -71,29 +80,69 @@ public class parserInterpreter {
         }
 
         /* "Get" command */
-        else if(tokenizedCommand[i].toLowerCase().equals("get")) {
+      /*  else if(tokenizedCommand[i].toLowerCase().equals("get")) {
             i++;
             /* Add artefact to player's inventory */
-            entities.addArtefactToPlayer(currentPlayer, currentLocation, tokenizedCommand[i]);
+       /*     entities.addArtefactToPlayer(currentPlayer, currentLocation, tokenizedCommand[i]);
             /* Delete artefact from current location*/
-            entities.deleteArtefact(currentLocation, tokenizedCommand[i]);
+     /*       entities.deleteArtefact(currentLocation, tokenizedCommand[i]);
+        }*/
+
+        /* NEW APPROACH - "Get" command */
+        else if(newTokenizedCommand.contains("get")) {
+         //   i++;
+            /* Find if keyword within user command matches an artefact in location */
+            String artefact = entities.matchLocationArtefact(newTokenizedCommand, currentLocation);
+            if(artefact != null) {
+                /* Add artefact to player's inventory */
+                entities.addArtefactToPlayer(currentPlayer, currentLocation, artefact);
+                /* Delete artefact from current location*/
+                entities.deleteArtefact(currentLocation, artefact);
+            }
+
         }
 
         /* "Drop" command */
-        else if(tokenizedCommand[i].toLowerCase().equals("drop")) {
+        /*else if(tokenizedCommand[i].toLowerCase().equals("drop")) {
             i++;
             /* Add artefact to current location   --  might be too long method name*/
-            entities.addArtefactToLocation(currentLocation, currentPlayer, tokenizedCommand[i]);
+       /*     entities.addArtefactToLocation(currentLocation, currentPlayer, tokenizedCommand[i]);
             /* Delete artefact from player's inventory  --  might be too long method name */
-            entities.deleteArtefactFromPlayer(currentPlayer, tokenizedCommand[i]);
+        /*    entities.deleteArtefactFromPlayer(currentPlayer, tokenizedCommand[i]);
+        }*/
+
+        /* NEW APPROACH - "Drop" command */
+        else if(newTokenizedCommand.contains("drop")) {
+           // i++;
+            /* Find if keyword within user command matches an artefact in player's inventory */
+            String artefact = entities.matchPlayerArtefact(newTokenizedCommand, currentPlayer);
+            if(artefact != null) {
+                /* Add artefact to current location   --  might be too long method name*/
+                entities.addArtefactToLocation(currentLocation, currentPlayer, artefact);
+                /* Delete artefact from player's inventory  --  might be too long method name */
+                entities.deleteArtefactFromPlayer(currentPlayer, artefact);
+            }
         }
 
+
+
         /* Goto command */
-        else if(tokenizedCommand[i].toLowerCase().equals("goto")) {
+       /* else if(tokenizedCommand[i].toLowerCase().equals("goto")) {
             i++;
             /* Update current player's location */
-            entities.updatePlayerLocation(currentPlayer, tokenizedCommand[i]);
+       /*     entities.updatePlayerLocation(currentPlayer, tokenizedCommand[i]);
+        }*/
+
+        else if(newTokenizedCommand.contains("goto")) {
+         //   i++;
+            /* Find if keyword within user command matches an location in game world */
+            String location = entities.matchLocation(newTokenizedCommand, currentLocation);
+            if(location != null) {
+                /* Update current player's location */
+                entities.updatePlayerLocation(currentPlayer, location);
+            }
         }
+
 
         // System.out.println("ACTIONS\n\n\n");
 
@@ -108,27 +157,52 @@ public class parserInterpreter {
         else {
             for(int j = 0; j < actions.getActions().size(); j++) {
                 /* Check that trigger word exists in set of trigger words */
-                if(actions.getActions().get(j).get("triggers").contains(tokenizedCommand[i])) {
-                    i++;
-                    /* Check that subjects exist in action set - to verify action in case of repeated trigger word */
-                    if(actions.getActions().get(j).get("subjects").contains(tokenizedCommand[i])) {
+                if(containMatchingElement(actions.getActions().get(j).get("triggers"), newTokenizedCommand)) {
+                //if(actions.getActions().get(j).get("triggers").contains(tokenizedCommand[i])) {
+                 //   i++;
+                    /* Check that subject exist in action set - to verify action in case of repeated trigger word */
+                    if(!containMatchingElement(actions.getActions().get(j).get("subjects"), newTokenizedCommand)) {
+                        ArrayList<String> errorMessage = new ArrayList<>();
+                        errorMessage.add("Ambiguous command!");
+                        return errorMessage;
+                    }
+                    else {//(containMatchingElement(actions.getActions().get(j).get("subjects"), newTokenizedCommand)) {
+                   // if(actions.getActions().get(j).get("subjects").contains(tokenizedCommand[i])) {
                         /* Check that subjects are present in location or player inventory */
+                        System.out.println("INSIDE ELSE:");
                         if(entities.subjectsExist(actions.getActions().get(j).get("subjects"), currentLocation, currentPlayer)) {
                             System.out.println("SUBJECTS ACTUALLY EXIST\n\n");
                             /* Removing item from current location or current player's inventory */
-                            entities.removeItemConsumed(actions.getActions().get(j).get("consumed").get(0), currentLocation, currentPlayer);
-                            /* Moving "produced" item from unplaced location to current location */
-                            entities.addItemProduced(actions.getActions().get(j).get("produced").get(0), currentLocation);
+                            if(actions.getActions().get(j).get("consumed").size() > 0) {
+                                entities.removeItemConsumed(actions.getActions().get(j).get("consumed").get(0), currentLocation, currentPlayer);
+                            }
+                            /* Adding "produced" item  to current location */
+                            if(actions.getActions().get(j).get("produced").size() > 0) {
+                                System.out.println("inside interpreter produced");
+                                entities.addItemProduced(actions.getActions().get(j).get("produced").get(0), currentLocation);
+                            }
+                            /* Removing "produced" item from its current location */
+                           // entities.removeFromLocation(actions.getActions().get(j).get("produced").get(0));
                             return actions.getActions().get(j).get("narration");
                         }
                     }
-                    i--;
+                   // i--;
                 }
             }
         }
-
         return null;
+    }
 
+    private boolean containMatchingElement(ArrayList<String> actionElement, ArrayList<String> tokenizedCommand) {
+        System.out.println("COMPARING MATCHING ELEMENTS");
+        System.out.println("actionElement: " + actionElement);
+        System.out.println("command: " + tokenizedCommand);
+        for(int i = 0; i < actionElement.size(); i++) {
+            if(tokenizedCommand.contains(actionElement.get(i))) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void setCurrentPlayer() {
@@ -175,8 +249,23 @@ public class parserInterpreter {
     private boolean builtinExists(String keyword, String builtin) {
         System.out.println("builtinExists: kw- " + keyword + " built- " + builtin);
         if(keyword.toLowerCase().equals(builtin)) {
-            System.out.println("TRUE");
+            //System.out.println("TRUE");
             return true;
+        }
+        return false;
+    }
+
+    private boolean multipleBuiltinExist(ArrayList<String> command) {
+        Integer counter = 0;
+        for(int i = 0; i < command.size(); i++) {
+            for(int j = 0; j < builtinCommands.length; j++) {
+                if(builtinExists(command.get(i), builtinCommands[j])) {
+                    counter++;
+                    if(counter == 2) {
+                        return true;
+                    }
+                }
+            }
         }
         return false;
     }

@@ -108,7 +108,6 @@ public class CommandParser {
         }
 
         return null;
-
     }
 
     private String[] tokenize() {

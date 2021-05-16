@@ -16,9 +16,10 @@ public class Location {
         this.description = description;
     }
 
-    public void deleteArtefact(String artefactName) {
+    /* REPLACED BY deleteItem */
+   /* public void deleteArtefact(String artefactName) {
         locationContents.get("artefacts").remove(artefactName);
-    }
+    }*/
 
     public void setLocationContents(HashMap<String, HashMap<String,String>> locationContents) {
         this.locationContents = locationContents;
@@ -73,14 +74,14 @@ public class Location {
     }
 
     public boolean furnitureExists(String furniture) {
-        if(artefactsExist() && locationContents.get("furniture").containsKey(furniture)) {
+        if(furnitureExist() && locationContents.get("furniture").containsKey(furniture)) {
             return true;
         }
         return false;
     }
 
     public boolean characterExists(String character) {
-        if(artefactsExist() && locationContents.get("characters").containsKey(character)) {
+        if(charactersExist() && locationContents.get("characters").containsKey(character)) {
             return true;
         }
         return false;

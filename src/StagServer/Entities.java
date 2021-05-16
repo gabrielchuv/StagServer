@@ -51,7 +51,7 @@ public class Entities {
     public boolean subjectsExist(ArrayList<String> subjects, String currentLocation, String currentPlayer) {
         for(int i = 0; i < subjects.size(); i++) {
             if(!locations.get(currentLocation).itemExists(subjects.get(i)) &&
-                    !players.get(currentPlayer).itemExists(subjects.get(i))) {
+                    !players.get(currentPlayer).artefactExists(subjects.get(i))) {
                 return false;
             }
         }
@@ -65,14 +65,14 @@ public class Entities {
             locations.get(currentLocation).deleteItem(consumedItem);
         }
         // If in players' inventory, remove from inv
-        if(players.get(currentPlayer).itemExists(consumedItem)) {
+        if(players.get(currentPlayer).artefactExists(consumedItem)) {
             players.get(currentPlayer).deleteArtefact(consumedItem);
         }
     }
 
     /* Executing "Action" command */
     public void addItemProduced(String producedItem, String currentLocation) {
-
+        System.out.println("ADD ITEM PRODUCED");
         // Deal with adding health here
 
         // If a location, add path to that location
@@ -81,22 +81,36 @@ public class Entities {
         }
 
         // Otherwise, simply add item to current location
-        // If it exists as an artefact, add as an artefact
-        if(locations.get("unplaced").artefactExists(producedItem)) {
-            String artefactDescription = locations.get("unplaced").getArtefactDescription(producedItem);
-            locations.get(currentLocation).addArtefact(producedItem, artefactDescription);
+        for (String key : locations.keySet()) {
+            // If it exists as an artefact, add as an artefact
+            if(locations.get(key).artefactExists(producedItem)) {
+                String artefactDescription = locations.get(key).getArtefactDescription(producedItem);
+                locations.get(currentLocation).addArtefact(producedItem, artefactDescription);
+                removeFromLocation(producedItem, key);
+            }
+            // If it exists as furniture, add as furniture
+            if(locations.get(key).furnitureExists(producedItem)) {
+                String furnitureDescription = locations.get(key).getFurnitureDescription(producedItem);
+                locations.get(currentLocation).addFurniture(producedItem, furnitureDescription);
+                removeFromLocation(producedItem, key);
+            }
+            // If it exists as a character, add as character
+            if(locations.get(key).characterExists(producedItem)) {
+                String characterDescription = locations.get(key).getCharacterDescription(producedItem);
+                locations.get(currentLocation).addCharacter(producedItem, characterDescription);
+                removeFromLocation(producedItem, key);
+            }
         }
-        // If it exists as furniture, add as furniture
-        if(locations.get("unplaced").furnitureExists(producedItem)) {
-            String furnitureDescription = locations.get("unplaced").getFurnitureDescription(producedItem);
-            locations.get(currentLocation).addFurniture(producedItem, furnitureDescription);
-        }
-        // If it exists as a character, add as character
-        if(locations.get("unplaced").furnitureExists(producedItem)) {
-            String characterDescription = locations.get("unplaced").getCharacterDescription(producedItem);
-            locations.get(currentLocation).addCharacter(producedItem, characterDescription);
-        }
+    }
 
+    private void removeFromLocation(String producedItem, String location) {
+       /* for (String key : locations.keySet()) {
+            if(locations.get(key).itemExists(producedItem)) {
+                locations.get(key).deleteItem(producedItem);
+            }
+        }*/
+        locations.get(location).deleteItem(producedItem);
+        System.out.println("Artefacts in unplaced: " + locations.get("unplaced").getArtefacts());
     }
 
     public HashMap<String, ArrayList<String>> getPaths() {
@@ -126,6 +140,33 @@ public class Entities {
 
     public String getPlayerLocation(String currentPlayer) {
         return players.get(currentPlayer).getCurrentLocation();
+    }
+    /* IS IT POSSIBLE TO SIMPLIFY THIS THROUGH A CONTAINS. */
+    public String matchLocationArtefact(ArrayList<String> command, String currentLocation) {
+        for(int i = 0; i < command.size(); i++) {
+            if (locations.get(currentLocation).artefactExists(command.get(i))) {
+                return command.get(i);
+            }
+        }
+        return null;
+    }
+    /* IS IT POSSIBLE TO SIMPLIFY THIS THROUGH A CONTAINS. */
+    public String matchPlayerArtefact(ArrayList<String> command, String currentPlayer) {
+        for(int i = 0; i < command.size(); i++) {
+            if (players.get(currentPlayer).artefactExists(command.get(i))) {
+                return command.get(i);
+            }
+        }
+        return null;
+    }
+    /* IS IT POSSIBLE TO SIMPLIFY THIS THROUGH A CONTAINS. */
+    public String matchLocation(ArrayList<String> command, String currentLocation) {
+        for(int i = 0; i < command.size(); i++) {
+            if (paths.get(currentLocation).contains(command.get(i))) {
+                return command.get(i);
+            }
+        }
+        return null;
     }
 
     public void updatePlayerLocation(String playerName, String locationName) {
@@ -175,7 +216,7 @@ public class Entities {
     }
 
     public void deleteArtefact(String currentLocation, String artefactName) {
-        locations.get(currentLocation).deleteArtefact(artefactName);
+        locations.get(currentLocation).deleteItem(artefactName);
     }
 
     /* FOR TESTING  */

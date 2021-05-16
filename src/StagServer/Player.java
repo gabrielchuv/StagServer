@@ -25,7 +25,7 @@ public class Player {
         return this.inventory.get(artefactName);
     }
 
-    public boolean itemExists(String item) {
+    public boolean artefactExists(String item) {
         if(!inventory.containsKey(item)) {
             return false;
         }
