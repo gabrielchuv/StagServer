@@ -26,36 +26,38 @@ public class ActionParser {
         try {
             FileReader reader = new FileReader(actionFileName);
             JSONObject jsonObject = (JSONObject) parser.parse(reader);
-
             JSONArray actions = (JSONArray) jsonObject.get("actions");
 
+            /* Parsing all actions in file */
             for(Object action : actions) {
                 HashMap<String, ArrayList<String>> parsedAction = new HashMap<>();
                 JSONObject jsonAction = (JSONObject) action;
 
+                /* Parsing triggers */
                 ArrayList<String> triggers = (ArrayList<String>) jsonAction.get("triggers");
                 parsedAction.put("triggers", triggers);
 
+                /* Parsing subjects */
                 ArrayList<String> subjects = (ArrayList<String>) jsonAction.get("subjects");
                 parsedAction.put("subjects", subjects);
 
+                /* Parsing consumed */
                 ArrayList<String> consumed = (ArrayList<String>) jsonAction.get("consumed");
                 parsedAction.put("consumed", consumed);
 
+                /* Parsing produced */
                 ArrayList<String> produced = (ArrayList<String>) jsonAction.get("produced");
                 parsedAction.put("produced", produced);
 
+                /* Parsing narration */
                 String stringNarration = (String) jsonAction.get("narration");
                 ArrayList<String> arrayNarration = new ArrayList<>();
                 arrayNarration.add(stringNarration);
                 parsedAction.put("narration", arrayNarration);
 
-                this.actions.setActions(parsedAction);
-               /* ArrayList<String> narration = (ArrayList<String>) jsonAction.get("narration");
-                parsedAction.put("narration", narration);*/
+                /* Populating data structure in Action class */
+                this.actions.setAction(parsedAction);
             }
-
-
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (ParseException e) {
@@ -63,15 +65,6 @@ public class ActionParser {
         } catch (IOException exception) {
             exception.printStackTrace();
         }
-
         return(actions);
-
     }
-
-    public void printing() {
-        System.out.println("PRINTING");
-        System.out.println();
-        System.out.println(actions.getActions());
-    }
-
 }

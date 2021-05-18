@@ -21,13 +21,9 @@ public class StagServer {
         try {
             EntityParser entitiesParser = new EntityParser(entityFilename);
             entities = entitiesParser.parse();
-            /* for testing */
-            entitiesParser.printing();
 
             ActionParser actionParser = new ActionParser(actionFilename);
             actions = actionParser.parse();
-            /* for testing */
-            actionParser.printing();
 
             ServerSocket ss = new ServerSocket(portNumber);
             System.out.println("Server Listening");
@@ -56,15 +52,13 @@ public class StagServer {
     private void processNextCommand(BufferedReader in, BufferedWriter out) throws IOException
     {
         String line = in.readLine();
-        //CommandParser commandParser = new CommandParser(line);
-        parserInterpreter commandParser = new parserInterpreter(line);
+        ParserInterpreter parserInterpreter = new ParserInterpreter(line);
 
-        ArrayList<String> output = new ArrayList<>();
-        output = commandParser.parse(entities, actions);
+        ArrayList<String> output;
+        output = parserInterpreter.parse(entities, actions);
         if(output != null) {
-            for(int i = 0; i < output.size(); i++) {
-                out.write(output.get(i) + "\n");
-                //System.out.println();
+            for (String s : output) {
+                out.write(s + "\n");
             }
         }
 

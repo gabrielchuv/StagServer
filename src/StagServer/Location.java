@@ -12,152 +12,76 @@ public class Location {
         locationContents = new HashMap<>();
     }
 
+    /* Set description extracted from entities.dot file */
     public void setDescription(String description) {
         this.description = description;
     }
 
-    /* REPLACED BY deleteItem */
-   /* public void deleteArtefact(String artefactName) {
-        locationContents.get("artefacts").remove(artefactName);
-    }*/
-
+    /* Set all contents of location into data structure (from entities.dot file) */
     public void setLocationContents(HashMap<String, HashMap<String,String>> locationContents) {
         this.locationContents = locationContents;
     }
 
+    /* Get location's description */
     public String getDescription() {
         return description;
     }
 
-    public String getArtefactDescription(String artefactName) {
-        return locationContents.get("artefacts").get(artefactName);
+    /* Get description for a single entity in location */
+    public String getEntityDescription(String entityType, String entityName) {
+        return locationContents.get(entityType).get(entityName);
     }
 
-    public String getFurnitureDescription(String furnitureName) {
-        return locationContents.get("furniture").get(furnitureName);
-    }
-
-    public String getCharacterDescription(String characterName) {
-        return locationContents.get("characters").get(characterName);
-    }
-
-    public ArrayList<String> getFurniture() {
-        ArrayList<String> furniture = new ArrayList<>();
-        for (String key: locationContents.get("furniture").keySet()) {
-            furniture.add(locationContents.get("furniture").get(key));
-        }
-        return furniture;
-    }
-
-
-    public ArrayList<String> getCharacters() {
-        ArrayList<String> furniture = new ArrayList<>();
-        for (String key: locationContents.get("characters").keySet()) {
-            furniture.add(locationContents.get("characters").get(key));
-        }
-        return furniture;
-    }
-
-    public ArrayList<String> getArtefacts() {
+    /* Get descriptions for all entities in location */
+    public ArrayList<String> getEntityDescriptions(String entityType) {
         ArrayList<String> artefacts = new ArrayList<>();
-        for (String key: locationContents.get("artefacts").keySet()) {
-            artefacts.add(locationContents.get("artefacts").get(key));
+        for (String key: locationContents.get(entityType).keySet()) {
+            artefacts.add(locationContents.get(entityType).get(key));
         }
         return artefacts;
     }
 
-    public boolean artefactExists(String artefact) {
-        if(artefactsExist() && locationContents.get("artefacts").containsKey(artefact)) {
+    /* Check whether a given entity exists in this location in general (artefact, furniture, or character) */
+    public boolean entityExists(String entity) {
+        return specificEntityExists("artefacts", entity) || specificEntityExists("furniture", entity)
+        || specificEntityExists("characters", entity);
+    }
+
+    /* Check whether a given entity exists in this location as a specific entity type (artefact, furniture, character) */
+    public boolean specificEntityExists(String entityType, String entity) {
+        if(entitiesExist(entityType) && locationContents.get(entityType).containsKey(entity)) {
             return true;
         }
         return false;
     }
 
-    public boolean furnitureExists(String furniture) {
-        if(furnitureExist() && locationContents.get("furniture").containsKey(furniture)) {
-            return true;
-        }
-        return false;
-    }
-
-    public boolean characterExists(String character) {
-        if(charactersExist() && locationContents.get("characters").containsKey(character)) {
-            return true;
-        }
-        return false;
-    }
-
-    public boolean itemExists(String item) {
-        for(int i = 0; i < locationContents.size(); i++) {
-            if(artefactsExist() && locationContents.get("artefacts").containsKey(item)) {
-                return true;
+    /* Delete a given entity from location */
+    public void deleteEntity(String entity) {
+            if(entitiesExist("artefacts")) {
+                locationContents.get("artefacts").remove(entity);
             }
-            if(furnitureExist() && locationContents.get("furniture").containsKey(item)) {
-                return true;
+            if(entitiesExist("furniture")) {
+                locationContents.get("furniture").remove(entity);
             }
-            if(charactersExist() && locationContents.get("characters").containsKey(item)) {
-                return true;
+            if(entitiesExist("characters")) {
+                locationContents.get("characters").remove(entity);
             }
+    }
+
+    /* Add a given entity (name + description) to location */
+    public void addEntity(String entityType, String entityName, String entityDescription) {
+        HashMap<String, String> entity = new HashMap<>();
+        entity.put(entityName, entityDescription);
+        /* If entity type doesn't exist yet */
+        if(!entitiesExist(entityType)) {
+            locationContents.put(entityType, entity);
         }
-        return false;
+        /* If entity type already exists */
+        locationContents.get(entityType).put(entityName, entityDescription);
     }
 
-    public void deleteItem(String item) {
-        /* NEED TO REFACTOR THIS CODE TOGETHER WITH "ITEM EXISTS" METHOD  */
-        for(int i = 0; i < locationContents.size(); i++) {
-            // for(int j = 0; j < items.size(); j++) {
-            if(artefactsExist()) {
-                locationContents.get("artefacts").remove(item);
-            }
-            if(furnitureExist()) {
-                locationContents.get("furniture").remove(item);
-            }
-            if(charactersExist()) {
-                locationContents.get("characters").remove(item);
-            }
-        }
-    }
-
-    public void addArtefact(String artefactName, String artefactDescription) {
-        HashMap<String, String> artefact = new HashMap<>();
-        artefact.put(artefactName, artefactDescription);
-        if(!artefactsExist()) {
-            locationContents.put("artefacts", artefact);
-        }
-        locationContents.get("artefacts").put(artefactName, artefactDescription);
-    }
-
-    public void addFurniture(String furnitureName, String furnitureDescription) {
-        HashMap<String, String> furniture = new HashMap<>();
-        furniture.put(furnitureName, furnitureDescription);
-        if(!artefactsExist()) {
-            locationContents.put("artefacts", furniture);
-        }
-        locationContents.get("artefacts").put(furnitureName, furnitureDescription);
-    }
-
-    public void addCharacter(String characterName, String characterDescription) {
-        HashMap<String, String> character = new HashMap<>();
-        character.put(characterName, characterDescription);
-        if(!artefactsExist()) {
-            locationContents.put("artefacts", character);
-        }
-        locationContents.get("artefacts").put(characterName, characterDescription);
-    }
-
-    public boolean artefactsExist() {
-        return locationContents.containsKey("artefacts");
-    }
-
-    public boolean charactersExist() {
-        return locationContents.containsKey("characters");
-    }
-
-    public boolean furnitureExist() {
-        return locationContents.containsKey("furniture");
-    }
-
-    public HashMap<String, HashMap<String,String>> getLocationContents() {
-        return locationContents;
+    /* Checks whether a specific entity type exists (artefact, character, furniture) */
+    public boolean entitiesExist(String entityType) {
+        return locationContents.containsKey(entityType);
     }
 }
